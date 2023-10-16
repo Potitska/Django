@@ -1,21 +1,18 @@
-from django.db.models import QuerySet
-from django.http import QueryDict
+from django_filters import rest_framework as filters
 
-from rest_framework.serializers import ValidationError
-
-from apps.cars.models import CarModel
+from apps.cars.choices.body_type_choices import BodyTypeChoices
 
 
-def car_filtered_queryset(query: QueryDict) -> QuerySet:
-    qs = CarModel.objects.all()
-
-    for k, v in query.items():
-        match k:
-            case 'price_gt':
-                qs = qs.filter(price__gt=v)
-            case 'price_lt':
-                qs = qs.filter(price__lt=v)
-            case _:
-                raise ValidationError({'detail': f'{k} not allowed here'})
-
-    return qs
+class CarFilter(filters.FilterSet):
+    yearLt = filters.NumberFilter('year', 'lt')
+    year_gt = filters.NumberFilter('year', 'gt')
+    year_range = filters.RangeFilter('year')
+    brand_contains = filters.CharFilter('brand', 'icontains')
+    body = filters.ChoiceFilter('body', choices=BodyTypeChoices.choices)
+    order = filters.OrderingFilter(
+        fields=(
+            'id',
+            'brand',
+            'year'
+        )
+    )

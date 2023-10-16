@@ -10,6 +10,7 @@ from apps.cars.serializer import CarSerializer
 class AutoParkListCreateView(ListCreateAPIView):
     queryset = AutoParkModel.objects.all()
     serializer_class = AutoParkSerializer
+    pagination_class = None
 
 
 class AutoParkAddCarView(GenericAPIView):
