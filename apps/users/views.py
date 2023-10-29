@@ -1,29 +1,33 @@
 from django.contrib.auth import get_user_model
 
-from rest_framework.generics import CreateAPIView, ListAPIView, ListCreateAPIView
+from rest_framework.generics import ListCreateAPIView, UpdateAPIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 
-from apps.users.serializers import UserSerializer
+from apps.users.serializers import ProfileAvatarSerializer, UserSerializer
+
+from core.dataclasses.user_dataclass import ProfileDataClass
+from core.permissions import IsAdminOrWriteOnly
 
 UserModel = get_user_model()
 
 
-class UserCreateView(CreateAPIView):
-    serializer_class = UserSerializer
-
-
 class UserCreateView(ListCreateAPIView):
     serializer_class = UserSerializer
+    permission_classes = (IsAdminOrWriteOnly,)
 
-    def get_permissions(self):
-        if self.request.method == 'GET':
-            return (IsAuthenticated(),)
-        return (AllowAny(),)
     def get_queryset(self):
         return UserModel.objects.exclude(pk=self.request.user.pk)
 
-# class UserListView(ListAPIView):
-#     permission_classes = (IsAuthenticated,)
-#
-#     def get_queryset(self):
-#         return UserModel.objects.exclude(pk=self.request.user.pk)
+
+class UserAddAvatarView(UpdateAPIView):
+    permission_classes = (IsAuthenticated,)
+    serializer_class = ProfileAvatarSerializer
+    http_method_names = ('put',)
+
+    def get_object(self):
+        return UserModel.objects.get(pk=self.request.user.pk).profile
+
+    def perform_update(self, serializer):
+        profile: ProfileDataClass = self.get_object()
+        profile.avatar.delete()
+        super().perform_update(serializer)
