@@ -1,5 +1,5 @@
 from rest_framework.generics import ListAPIView, RetrieveUpdateDestroyAPIView, UpdateAPIView
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 from core.permissions import IsAdminWriteOrIsAuthenticatedRead
 
@@ -12,6 +12,7 @@ class CarListCreateView(ListAPIView):
     queryset = CarModel.objects.all()
     serializer_class = CarSerializer
     filterset_class = CarFilter
+    permission_classes = (AllowAny,)
 
 
 class CarRetrieveUpdateDestroyView(RetrieveUpdateDestroyAPIView):
