@@ -10,6 +10,6 @@ REST_FRAMEWORK = {
         'core.permissions.IsSuperUser',
     ],
 
-    'EXCEPTION_HANDLER':'core.handlers.error_handler.error_handler'
+    'EXCEPTION_HANDLER': 'core.handlers.error_handler.error_handler'
 
 }

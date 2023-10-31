@@ -2,6 +2,6 @@ import os
 
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
-EMAil_HOST_PASSWORD = os.environ.get('EMAil_HOST_PASSWORD')
+EMAil_HOST_PASSWORD = os.environ.get('EMAIl_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
 EMAIL_USE_TLS = True
